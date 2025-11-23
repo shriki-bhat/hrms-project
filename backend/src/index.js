@@ -14,7 +14,7 @@ const app = express();
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://<your-frontend-service>.up.railway.app'
+    'https://hrms-projectfrontend-production.up.railway.app'
   ],
   credentials: true
 }));
