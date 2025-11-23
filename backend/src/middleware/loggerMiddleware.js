@@ -7,14 +7,11 @@ module.exports = (req, res, next) => {
     const duration = Date.now() - start;
     const message = `${req.method} ${req.originalUrl} ${res.statusCode} - ${duration}ms`;
     if (res.statusCode >= 400) {
-      // Prefer this, so you have consistent logs
       logger.logOperation(
         req.user?.id || 'system',
         `[HTTP ${res.statusCode}] ${message}`
       );
     } else {
-      // Optionally keep logging success as well, up to you!
-      // logger.logOperation(req.user?.id || 'system', message);
     }
   });
 
