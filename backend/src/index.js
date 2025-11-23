@@ -11,7 +11,13 @@ const loggerMiddleware = require('./middleware/loggerMiddleware');
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'https://<your-frontend-service>.up.railway.app'
+  ],
+  credentials: true
+}));
 app.use(express.json());
 app.use(loggerMiddleware); 
 
