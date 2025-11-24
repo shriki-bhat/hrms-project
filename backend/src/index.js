@@ -12,11 +12,11 @@ const loggerMiddleware = require('./middleware/loggerMiddleware');
 const app = express();
 
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'https://hrms-frontend-fn4b.onrender.com'
-  ],
-  credentials: true
+    origin: [
+        'http://localhost:3000',
+        'https://hrms-frontend-fn4b.onrender.com'  
+    ],
+    credentials: true
 }));
 app.use(express.json());
 app.use(loggerMiddleware); 
