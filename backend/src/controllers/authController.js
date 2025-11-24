@@ -40,7 +40,7 @@ exports.register = async (req, res) => {
 
     // Create admin user
     const [userResult] = await db.execute(
-      'INSERT INTO users (organisation_id, email, password_hash, name) VALUES (?, ?, ?, ?)',
+      'INSERT INTO users (organisation_id, email, password, name) VALUES (?, ?, ?, ?)',
       [orgId, email, passwordHash, adminName]
     );
     const userId = userResult.insertId;
