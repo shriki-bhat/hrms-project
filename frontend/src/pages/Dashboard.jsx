@@ -1,8 +1,19 @@
 import React, { useEffect, useState } from "react";
 import api from "../services/api";
 import { Bar, Doughnut } from "react-chartjs-2";
-import ChartJS, { BarElement, ArcElement, CategoryScale, LinearScale, Tooltip, Legend, Title } from "chart.js";
+import {
+  Chart as ChartJS,
+  BarElement,
+  ArcElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+  Title
+} from 'chart.js';
+
 ChartJS.register(BarElement, ArcElement, CategoryScale, LinearScale, Tooltip, Legend, Title);
+
 
 const Dashboard = () => {
   const [data, setData] = useState(null);
