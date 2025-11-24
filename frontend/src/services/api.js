@@ -9,8 +9,10 @@ const getAuthHeader = () => ({
 
 const api = {
     // Auth
-    register: (data) => axios.post(`${API_URL}/api/register`, data),
-    login: (data) => axios.post(`${API_URL}/api/login`, data),
+    // Auth
+register: (data) => axios.post(`${API_URL}/api/auth/register`, data),
+login: (data) => axios.post(`${API_URL}/api/auth/login`, data),
+
 
     // Employees
     getEmployees: () => axios.get(`${API_URL}/employees`, getAuthHeader()),
