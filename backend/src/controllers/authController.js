@@ -90,7 +90,7 @@ exports.login = async (req, res) => {
     const user = users[0];
 
     // Verify password
-    const isValid = await bcrypt.compare(password, user.password_hash);
+    const isValid = await bcrypt.compare(password, user.password);
 
     if (!isValid) {
       return res.status(401).json({ error: 'Invalid credentials' });
