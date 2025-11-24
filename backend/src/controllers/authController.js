@@ -40,9 +40,9 @@ exports.register = async (req, res) => {
 
     // Create admin user
     const [userResult] = await db.execute(
-      'INSERT INTO users (organisation_id, email, password, name) VALUES (?, ?, ?, ?)',
-      [orgId, email, passwordHash, adminName]
-    );
+  "INSERT INTO users (organisation_id, email, password) VALUES (?, ?, ?)",
+  [organisationId, email, passwordHash]
+);
     const userId = userResult.insertId;
 
     // Create JWT token
@@ -79,10 +79,7 @@ exports.login = async (req, res) => {
 
     // Find user with organisation info (include organisation name)
     const [users] = await db.execute(
-      `SELECT users.*, organisations.name AS org_name
-       FROM users
-       JOIN organisations ON users.organisation_id = organisations.id
-       WHERE users.email = ?`,
+      `SELECT password FROM users WHERE email = ?`,
       [email]
     );
 
