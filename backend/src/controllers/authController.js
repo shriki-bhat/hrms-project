@@ -79,10 +79,8 @@ exports.login = async (req, res) => {
 
     // Find user with organisation info
     const [users] = await db.execute(
-      `SELECT u.*, o.name as org_name 
-       FROM users u 
-       JOIN organisations o ON u.organisation_id = o.id
-       WHERE u.email = ?`,
+      `SELECT * FROM users WHERE email = ?
+`,
       [email]
     );
 
