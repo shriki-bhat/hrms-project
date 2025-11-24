@@ -96,9 +96,3 @@ npm start
 ## 📄 License
 
 This project is open source and available under the MIT License.
-
-
-Save this to your project root directory and push:
-git add README.md
-git commit -m "Add README"
-git push origin main
