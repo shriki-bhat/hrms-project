@@ -40,9 +40,9 @@ exports.register = async (req, res) => {
 
     // Create admin user
     const [userResult] = await db.execute(
-  "INSERT INTO users (organisation_id, email, password) VALUES (?, ?, ?)",
-  [organisationId, email, passwordHash]
-);
+      'INSERT INTO users (organisation_id, email, password_hash, name) VALUES (?, ?, ?, ?)',
+      [orgId, email, passwordHash, adminName]
+    );
     const userId = userResult.insertId;
 
     // Create JWT token
@@ -77,9 +77,12 @@ exports.login = async (req, res) => {
       return res.status(400).json({ error: 'Email and password required' });
     }
 
-    // Find user with organisation info (include organisation name)
+    // Find user with organisation info
     const [users] = await db.execute(
-      `SELECT password FROM users WHERE email = ?`,
+      `SELECT u.*, o.name as org_name 
+       FROM users u 
+       JOIN organisations o ON u.organisation_id = o.id
+       WHERE u.email = ?`,
       [email]
     );
 
@@ -90,7 +93,7 @@ exports.login = async (req, res) => {
     const user = users[0];
 
     // Verify password
-    const isValid = await bcrypt.compare(password, user.password);
+    const isValid = await bcrypt.compare(password, user.password_hash);
 
     if (!isValid) {
       return res.status(401).json({ error: 'Invalid credentials' });
@@ -106,8 +109,6 @@ exports.login = async (req, res) => {
     // Log login
     await Log.create(user.organisation_id, user.id, 'user_login', `User: ${email}`);
 
-    // Log operation and return response
-    logOperation(user.id, 'logged in.');
     res.json({
       message: 'Login successful',
       token,
@@ -119,6 +120,7 @@ exports.login = async (req, res) => {
         orgName: user.org_name
       }
     });
+    logOperation(user.id, 'logged in.');
 
   } catch (error) {
     console.error('Login error:', error);
@@ -132,11 +134,11 @@ exports.logout = async (req, res) => {
     const { userId, orgId } = req.user;
     
     await Log.create(orgId, userId, 'user_logout', 'User logged out');
-    // Record local operation log and return
-    logOperation(userId, 'logged out.');
+    
     res.json({ message: 'Logged out successfully' });
   } catch (error) {
     console.error('Logout error:', error);
     res.status(500).json({ error: 'Logout failed' });
+    logOperation(user.id, 'logged out.');
   }
 };
