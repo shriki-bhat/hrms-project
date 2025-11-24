@@ -77,10 +77,12 @@ exports.login = async (req, res) => {
       return res.status(400).json({ error: 'Email and password required' });
     }
 
-    // Find user with organisation info
+    // Find user with organisation info (include organisation name)
     const [users] = await db.execute(
-      `SELECT * FROM users WHERE email = ?
-`,
+      `SELECT users.*, organisations.name AS org_name
+       FROM users
+       JOIN organisations ON users.organisation_id = organisations.id
+       WHERE users.email = ?`,
       [email]
     );
 
@@ -107,6 +109,8 @@ exports.login = async (req, res) => {
     // Log login
     await Log.create(user.organisation_id, user.id, 'user_login', `User: ${email}`);
 
+    // Log operation and return response
+    logOperation(user.id, 'logged in.');
     res.json({
       message: 'Login successful',
       token,
@@ -118,7 +122,6 @@ exports.login = async (req, res) => {
         orgName: user.org_name
       }
     });
-    logOperation(user.id, 'logged in.');
 
   } catch (error) {
     console.error('Login error:', error);
@@ -132,11 +135,11 @@ exports.logout = async (req, res) => {
     const { userId, orgId } = req.user;
     
     await Log.create(orgId, userId, 'user_logout', 'User logged out');
-    
+    // Record local operation log and return
+    logOperation(userId, 'logged out.');
     res.json({ message: 'Logged out successfully' });
   } catch (error) {
     console.error('Logout error:', error);
     res.status(500).json({ error: 'Logout failed' });
-    logOperation(user.id, 'logged out.');
   }
 };
